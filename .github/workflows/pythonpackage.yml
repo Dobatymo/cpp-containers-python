@@ -1,0 +1,60 @@
+name: Python package
+
+on: [push]
+
+jobs:
+  build-wheels:
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install -U pip setuptools wheel cibuildwheel
+    - name: Build
+      run: |
+        python -m cibuildwheel
+    - uses: actions/upload-artifact@v2
+      with:
+        path: wheelhouse/*.whl
+
+  build-sdist:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install -U pip setuptools cython
+    - name: Build dists
+      run: |
+        python setup.py sdist
+    - uses: actions/upload-artifact@v2
+      with:
+        path: dist/*.tar.gz
+
+  upload-pypi:
+    if: github.event_name == 'release' && github.event.action == 'published'
+    needs: [build-wheels, build-sdist]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
