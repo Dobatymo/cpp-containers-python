@@ -1,6 +1,17 @@
-from cppcontainers import Deque, ForwardList, List, Map, Set, UnorderedMap, UnorderedSet, Vector
+from cppcontainers import (
+    Deque,
+    ForwardList,
+    List,
+    Map,
+    MultiSet,
+    Set,
+    UnorderedMap,
+    UnorderedMultiSet,
+    UnorderedSet,
+    Vector,
+)
 
-sequences = [Deque, ForwardList, List, Set, UnorderedSet, Vector]
+sequences = [Deque, ForwardList, List, Set, UnorderedSet, Vector, MultiSet, UnorderedMultiSet]
 mappings = [Map, UnorderedMap]
 
 values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

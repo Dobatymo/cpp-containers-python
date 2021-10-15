@@ -7,10 +7,10 @@ from libcpp cimport bool as cbool
 from libcpp.deque cimport deque
 from libcpp.forward_list cimport forward_list
 from libcpp.list cimport list
-from libcpp.map cimport map
-from libcpp.set cimport set
-from libcpp.unordered_map cimport unordered_map
-from libcpp.unordered_set cimport unordered_set
+from libcpp.map cimport map, multimap
+from libcpp.set cimport multiset, set
+from libcpp.unordered_map cimport unordered_map, unordered_multimap
+from libcpp.unordered_set cimport unordered_multiset, unordered_set
 from libcpp.utility cimport pair
 from libcpp.vector cimport vector
 
@@ -23,9 +23,13 @@ ctypedef deque[PyObjectSmartPtr].iterator deque_it
 ctypedef forward_list[PyObjectSmartPtr].iterator forward_list_it
 ctypedef list[PyObjectSmartPtr].iterator list_it
 ctypedef map[PyObjectSmartPtr, PyObjectSmartPtr].iterator map_it
+ctypedef multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator multimap_it
 ctypedef set[PyObjectSmartPtr].iterator set_it
+ctypedef multiset[PyObjectSmartPtr].iterator multiset_it
 ctypedef unordered_map[PyObjectSmartPtr, PyObjectSmartPtr].iterator unordered_map_it
+ctypedef unordered_multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator unordered_multimap_it
 ctypedef unordered_set[PyObjectSmartPtr].iterator unordered_set_it
+ctypedef unordered_multiset[PyObjectSmartPtr].iterator unordered_multiset_it
 ctypedef vector[PyObjectSmartPtr].iterator vector_it
 
 cdef class DequeIterator:
@@ -111,6 +115,27 @@ cdef class MapIterator:
 		return self.it == other.it
 
 
+cdef class MultiMapIterator:
+
+	cdef multimap_it it
+
+	@staticmethod
+	cdef create(multimap_it it):
+		iter = MultiMapIterator()
+		iter.it = it
+		return iter
+
+	cpdef void next(self):
+		inc(self.it)
+
+	cpdef object deref(self):
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = deref(self.it)
+		return (<p_value_t>result.first.get(), <p_value_t>result.second.get())
+
+	def __eq__(self, MultiMapIterator other):
+		return self.it == other.it
+
+
 cdef class SetIterator:
 
 	cdef set_it it
@@ -128,6 +153,26 @@ cdef class SetIterator:
 		return <p_value_t>deref(self.it).get()
 
 	def __eq__(self, SetIterator other):
+		return self.it == other.it
+
+
+cdef class MultiSetIterator:
+
+	cdef multiset_it it
+
+	@staticmethod
+	cdef create(multiset_it it):
+		iter = MultiSetIterator()
+		iter.it = it
+		return iter
+
+	cpdef void next(self):
+		inc(self.it)
+
+	cpdef object deref(self):
+		return <p_value_t>deref(self.it).get()
+
+	def __eq__(self, MultiSetIterator other):
 		return self.it == other.it
 
 
@@ -152,6 +197,27 @@ cdef class UnorderedMapIterator:
 		return self.it == other.it
 
 
+cdef class UnorderedMultiMapIterator:
+
+	cdef unordered_multimap_it it
+
+	@staticmethod
+	cdef create(unordered_multimap_it it):
+		iter = UnorderedMultiMapIterator()
+		iter.it = it
+		return iter
+
+	cpdef void next(self):
+		inc(self.it)
+
+	cpdef object deref(self):
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = deref(self.it)
+		return (<p_value_t>result.first.get(), <p_value_t>result.second.get())
+
+	def __eq__(self, UnorderedMultiMapIterator other):
+		return self.it == other.it
+
+
 cdef class UnorderedSetIterator:
 
 	cdef unordered_set_it it
@@ -169,6 +235,26 @@ cdef class UnorderedSetIterator:
 		return <p_value_t>deref(self.it).get()
 
 	def __eq__(self, UnorderedSetIterator other):
+		return self.it == other.it
+
+
+cdef class UnorderedMultiSetIterator:
+
+	cdef unordered_multiset_it it
+
+	@staticmethod
+	cdef create(unordered_multiset_it it):
+		iter = UnorderedMultiSetIterator()
+		iter.it = it
+		return iter
+
+	cpdef void next(self):
+		inc(self.it)
+
+	cpdef object deref(self):
+		return <p_value_t>deref(self.it).get()
+
+	def __eq__(self, UnorderedMultiSetIterator other):
 		return self.it == other.it
 
 
@@ -556,6 +642,108 @@ cdef class Map:
 		for k, v in it:
 			self.map[PyObjectSmartPtr(<c_value_t>k)] = PyObjectSmartPtr(<c_value_t>v)
 
+cdef class MultiMap:
+
+	cdef multimap[PyObjectSmartPtr, PyObjectSmartPtr] multimap
+
+	def __init__(self):
+		pass
+
+	# Iterators
+
+	cpdef MultiMapIterator begin(self):
+		return MultiMapIterator.create(self.multimap.begin())
+
+	cpdef MultiMapIterator end(self):
+		return MultiMapIterator.create(self.multimap.end())
+
+	def keys(self):
+		cdef multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.begin()
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
+		while it != self.multimap.end():
+			result = deref(it)
+			yield <p_value_t>result.first.get()
+			inc(it)
+
+	def values(self):
+		cdef multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.begin()
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
+		while it != self.multimap.end():
+			result = deref(it)
+			yield <p_value_t>result.second.get()
+			inc(it)
+
+	def items(self):
+		cdef multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.begin()
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
+		while it != self.multimap.end():
+			result = deref(it)
+			yield (<p_value_t>result.first.get(), <p_value_t>result.second.get())
+			inc(it)
+
+	def __iter__(self):
+		return self.keys()
+
+	# Capacity
+
+	cpdef cbool empty(self):
+		return self.multimap.empty()
+
+	cpdef size_t size(self):
+		return self.multimap.size()
+
+	cpdef size_t max_size(self):
+		return self.multimap.max_size()
+
+	# Modifiers
+
+	cpdef void clear(self):
+		self.multimap.clear()
+
+	cpdef MultiMapIterator insert(self, object key, object value):
+
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] item = pair[PyObjectSmartPtr, PyObjectSmartPtr](PyObjectSmartPtr(<c_value_t>key), PyObjectSmartPtr(<c_value_t>value))
+		cdef multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.insert(item)
+		return MultiMapIterator.create(it)
+
+	# Lookup
+
+	cpdef size_t count(self, object key):
+		cdef size_t result = self.multimap.count(PyObjectSmartPtr(<c_value_t>key))
+
+		return result
+
+	cpdef object find(self, object key):
+		cdef multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.find(PyObjectSmartPtr(<c_value_t>key))
+
+		if it != self.multimap.end():
+			return <p_value_t>deref(it).second.get()
+		else:
+			raise KeyError(key)
+
+	cpdef equal_range(self, object key):
+		cdef pair[multimap_it, multimap_it] result = self.multimap.equal_range(PyObjectSmartPtr(<c_value_t>key))
+		return MultiMapIterator.create(result.first), MultiMapIterator.create(result.second)
+
+	""" C++ 20
+	cpdef cbool contains(self, object key):
+		return self.multimap.contains(PyObjectSmartPtr(<c_value_t>key))
+	"""
+
+	# Non-member functions
+
+	def __eq__(self, MultiMap other) -> bool:
+		return self.multimap == other.multimap
+
+	# Convenience
+
+	def update(self, it: Iterable[Tuple[Any, Any]]) -> None:
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] item
+		for key, value in it:
+			item = pair[PyObjectSmartPtr, PyObjectSmartPtr](PyObjectSmartPtr(<c_value_t>key), PyObjectSmartPtr(<c_value_t>value))
+			self.multimap.insert(item)
+
+
 cdef class Set:
 
 	cdef set[PyObjectSmartPtr] set
@@ -621,6 +809,11 @@ cdef class Set:
 		else:
 			raise KeyError(value)
 
+	cpdef equal_range(self, object key):
+		cdef pair[set[PyObjectSmartPtr].iterator, set[PyObjectSmartPtr].iterator] result = self.set.equal_range(PyObjectSmartPtr(<c_value_t>key))
+
+		return SetIterator.create(result.first), SetIterator.create(result.second)
+
 	# Non-member functions
 
 	def __eq__(self, Set other) -> bool:
@@ -631,6 +824,87 @@ cdef class Set:
 	def update(self, it: Iterable[Any]) -> None:
 		for value in it:
 			self.set.insert(PyObjectSmartPtr(<c_value_t>value))
+
+cdef class MultiSet:
+
+	cdef multiset[PyObjectSmartPtr] multiset
+
+	def __init__(self):
+		pass
+
+	# Iterators
+
+	cpdef MultiSetIterator begin(self):
+		return MultiSetIterator.create(self.multiset.begin())
+
+	cpdef MultiSetIterator end(self):
+		return MultiSetIterator.create(self.multiset.end())
+
+	def __iter__(self):
+		cdef multiset[PyObjectSmartPtr].iterator it = self.multiset.begin()
+		while it != self.multiset.end():
+			yield <p_value_t>deref(it).get()
+			inc(it)
+
+	# Capacity
+
+	cpdef cbool empty(self):
+		return self.multiset.empty()
+
+	cpdef size_t size(self):
+		return self.multiset.size()
+
+	cpdef size_t max_size(self):
+		return self.multiset.max_size()
+
+	# Modifiers
+
+	cpdef void clear(self):
+		self.multiset.clear()
+
+	cpdef MultiSetIterator insert(self, object value):
+		cdef multiset[PyObjectSmartPtr].iterator it = self.multiset.insert(PyObjectSmartPtr(<c_value_t>value))
+
+		return MultiSetIterator.create(it)
+
+	cpdef void swap(self, MultiSet other):
+		self.multiset.swap(other.multiset)
+
+	""" C++ 17
+	cpdef void merge(self, MultiSet source):
+		self.multiset.merge(source.multiset)
+	"""
+
+	# Lookup
+
+	cpdef size_t count(self, object key):
+		cdef size_t result = self.multiset.count(PyObjectSmartPtr(<c_value_t>key))
+
+		return result
+
+	cpdef object find(self, object key):
+		cdef multiset_it it = self.multiset.find(PyObjectSmartPtr(<c_value_t>key))
+
+		if it != self.multiset.end():
+			return <p_value_t>deref(it).get()
+		else:
+			raise KeyError(key)
+
+	cpdef equal_range(self, object key):
+		cdef pair[multiset_it, multiset_it] result = self.multiset.equal_range(PyObjectSmartPtr(<c_value_t>key))
+
+		return MultiSetIterator.create(result.first), MultiSetIterator.create(result.second)
+
+	# Non-member functions
+
+	def __eq__(self, MultiSet other) -> bool:
+		return self.multiset == other.multiset
+
+	# Convenience
+
+	def update(self, it: Iterable[Any]) -> None:
+		for value in it:
+			self.multiset.insert(PyObjectSmartPtr(<c_value_t>value))
 
 cdef class UnorderedMap:
 
@@ -735,6 +1009,102 @@ cdef class UnorderedMap:
 		for k, v in it:
 			self.map[PyObjectSmartPtr(<c_value_t>k)] = PyObjectSmartPtr(<c_value_t>v)
 
+cdef class UnorderedMultiMap:
+
+	cdef unordered_multimap[PyObjectSmartPtr, PyObjectSmartPtr] multimap
+
+	def __init__(self):
+		pass
+
+	# Iterators
+
+	cpdef UnorderedMultiMapIterator begin(self):
+		return UnorderedMultiMapIterator.create(self.multimap.begin())
+
+	cpdef UnorderedMultiMapIterator end(self):
+		return UnorderedMultiMapIterator.create(self.multimap.end())
+
+	def keys(self):
+		cdef unordered_multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.begin()
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
+		while it != self.multimap.end():
+			result = deref(it)
+			yield <p_value_t>result.first.get()
+			inc(it)
+
+	def values(self):
+		cdef unordered_multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.begin()
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
+		while it != self.multimap.end():
+			result = deref(it)
+			yield <p_value_t>result.second.get()
+			inc(it)
+
+	def items(self):
+		cdef unordered_multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.begin()
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
+		while it != self.multimap.end():
+			result = deref(it)
+			yield (<p_value_t>result.first.get(), <p_value_t>result.second.get())
+			inc(it)
+
+	def __iter__(self):
+		return self.keys()
+
+	# Capacity
+
+	cpdef cbool empty(self):
+		return self.multimap.empty()
+
+	cpdef size_t size(self):
+		return self.multimap.size()
+
+	cpdef size_t max_size(self):
+		return self.multimap.max_size()
+
+	# Modifiers
+
+	cpdef void clear(self):
+		self.multimap.clear()
+
+	cpdef UnorderedMultiMapIterator insert(self, object key, object value):
+
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] item = pair[PyObjectSmartPtr, PyObjectSmartPtr](PyObjectSmartPtr(<c_value_t>key), PyObjectSmartPtr(<c_value_t>value))
+		cdef unordered_multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.insert(item)
+		return UnorderedMultiMapIterator.create(it)
+
+	# Lookup
+
+	cpdef size_t count(self, object key):
+		cdef size_t result = self.multimap.count(PyObjectSmartPtr(<c_value_t>key))
+
+		return result
+
+	cpdef object find(self, object key):
+		cdef unordered_multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.find(PyObjectSmartPtr(<c_value_t>key))
+
+		if it != self.multimap.end():
+			return <p_value_t>deref(it).second.get()
+		else:
+			raise KeyError(key)
+
+	cpdef equal_range(self, object key):
+		cdef pair[unordered_multimap_it, unordered_multimap_it] result = self.multimap.equal_range(PyObjectSmartPtr(<c_value_t>key))
+		return UnorderedMultiMapIterator.create(result.first), UnorderedMultiMapIterator.create(result.second)
+
+	""" C++ 20
+	cpdef cbool contains(self, object key):
+		return self.multimap.contains(PyObjectSmartPtr(<c_value_t>key))
+	"""
+
+	# Convenience
+
+	def update(self, it: Iterable[Tuple[Any, Any]]) -> None:
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] item
+		for key, value in it:
+			item = pair[PyObjectSmartPtr, PyObjectSmartPtr](PyObjectSmartPtr(<c_value_t>key), PyObjectSmartPtr(<c_value_t>value))
+			self.multimap.insert(item)
+
 cdef class UnorderedSet:
 
 	cdef unordered_set[PyObjectSmartPtr] set
@@ -810,6 +1180,82 @@ cdef class UnorderedSet:
 	def update(self, it: Iterable[Any]) -> None:
 		for value in it:
 			self.set.insert(PyObjectSmartPtr(<c_value_t>value))
+
+cdef class UnorderedMultiSet:
+
+	cdef unordered_multiset[PyObjectSmartPtr] multiset
+
+	def __init__(self):
+		pass
+
+	# Iterators
+
+	cpdef UnorderedMultiSetIterator begin(self):
+		return UnorderedMultiSetIterator.create(self.multiset.begin())
+
+	cpdef UnorderedMultiSetIterator end(self):
+		return UnorderedMultiSetIterator.create(self.multiset.end())
+
+	def __iter__(self):
+		cdef unordered_multiset_it it = self.multiset.begin()
+		while it != self.multiset.end():
+			yield <p_value_t>deref(it).get()
+			inc(it)
+
+	# Capacity
+
+	cpdef cbool empty(self):
+		return self.multiset.empty()
+
+	cpdef size_t size(self):
+		return self.multiset.size()
+
+	cpdef size_t max_size(self):
+		return self.multiset.max_size()
+
+	# Modifiers
+
+	cpdef void clear(self):
+		self.multiset.clear()
+
+	cpdef UnorderedMultiSetIterator insert(self, object value):
+		cdef unordered_multiset[PyObjectSmartPtr].iterator it = self.multiset.insert(PyObjectSmartPtr(<c_value_t>value))
+
+		return UnorderedMultiSetIterator.create(it)
+
+	cpdef void swap(self, UnorderedMultiSet other):
+		self.multiset.swap(other.multiset)
+
+	""" C++ 17
+	cpdef void merge(self, UnorderedMultiSet source):
+		self.multiset.merge(source.multiset)
+	"""
+
+	# Lookup
+
+	cpdef size_t count(self, object key):
+		cdef size_t result = self.multiset.count(PyObjectSmartPtr(<c_value_t>key))
+
+		return result
+
+	cpdef object find(self, object key):
+		cdef unordered_multiset_it it = self.multiset.find(PyObjectSmartPtr(<c_value_t>key))
+
+		if it != self.multiset.end():
+			return <p_value_t>deref(it).get()
+		else:
+			raise KeyError(key)
+
+	cpdef equal_range(self, object key):
+		cdef pair[unordered_multiset_it, unordered_multiset_it] result = self.multiset.equal_range(PyObjectSmartPtr(<c_value_t>key))
+
+		return (UnorderedSetIterator.create(result.first), UnorderedSetIterator.create(result.second))
+
+	# Convenience
+
+	def update(self, it: Iterable[Any]) -> None:
+		for value in it:
+			self.multiset.insert(PyObjectSmartPtr(<c_value_t>value))
 
 cdef class Vector:
 
