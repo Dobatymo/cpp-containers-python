@@ -63,7 +63,7 @@ public:
         return get() != other.get();
     }
 
-    ssize_t refcount() const {
+    Py_ssize_t refcount() const {
         if (ptr == nullptr) {
             throw std::invalid_argument("nullptr");
         }

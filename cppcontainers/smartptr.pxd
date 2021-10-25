@@ -9,7 +9,7 @@ cdef extern from "smartptr.h":
 
 		PyObjectSmartPtr(PyObject *) except +
 		PyObject *get() const
-		ssize_t refcount() const
+		Py_ssize_t refcount() const
 		cbool operator<(const PyObjectSmartPtr &) const
 		cbool operator==(const PyObjectSmartPtr &) const
 		cbool operator!=(const PyObjectSmartPtr &) const
