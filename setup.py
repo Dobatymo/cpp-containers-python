@@ -39,9 +39,9 @@ with open("README.md", "r", encoding="utf-8") as fr:
     long_description = fr.read()
 
 compiler_directives = {
-    "binding": False,
     "boundscheck": False,
     "wraparound": False,
+    "initializedcheck": False,
     "annotation_typing": True,
     "warn.undeclared": True,
     "warn.unused": True,
@@ -60,6 +60,5 @@ setup(
     packages=["cppcontainers"],
     ext_modules=cythonize(cy_extensions, language_level=3, compiler_directives=compiler_directives),
     python_requires=">=3.6",
-    use_2to3=False,
     zip_safe=False,
 )

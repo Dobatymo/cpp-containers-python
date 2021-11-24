@@ -2,6 +2,8 @@
 #define PY_SSIZE_T_CLEAN
 #include "Python.h"
 
+// use https://docs.python.org/3/c-api/init.html#c.PyGILState_Ensure around refcount actions?
+
 class PyObjectSmartPtr {
 protected:
     PyObject *ptr;
@@ -67,7 +69,7 @@ public:
         if (ptr == nullptr) {
             throw std::invalid_argument("nullptr");
         }
-        return ptr->ob_refcnt;
+        return Py_REFCNT(ptr);
     }
 };
 
