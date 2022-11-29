@@ -335,6 +335,9 @@ cdef class Deque:
 	cpdef void clear(self):
 		self.deque.clear()
 
+	cpdef DequeIterator erase(self, DequeIterator pos):
+		return DequeIterator.create(self.deque.erase(pos.it))
+
 	cpdef void push_back(self, object value):
 		self.deque.push_back(PyObjectSmartPtr(<c_value_t>value))
 
@@ -488,6 +491,9 @@ cdef class List:
 	cpdef void clear(self):
 		self.list.clear()
 
+	cpdef ListIterator erase(self, ListIterator pos):
+		return ListIterator.create(self.list.erase(pos.it))
+
 	cpdef void push_back(self, object value):
 		self.list.push_back(PyObjectSmartPtr(<c_value_t>value))
 
@@ -611,6 +617,9 @@ cdef class Map:
 		cdef pair[map[PyObjectSmartPtr, PyObjectSmartPtr].iterator, cbool] result = self.map.insert(item)
 		return result.second
 
+	cpdef MapIterator erase(self, MapIterator pos):
+		return MapIterator.create(self.map.erase(pos.it))
+
 	# Lookup
 
 	cpdef size_t count(self, object key):
@@ -706,6 +715,9 @@ cdef class MultiMap:
 		cdef multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.insert(item)
 		return MultiMapIterator.create(it)
 
+	cpdef MultiMapIterator erase(self, MultiMapIterator pos):
+		return MultiMapIterator.create(self.multimap.erase(pos.it))
+
 	# Lookup
 
 	cpdef size_t count(self, object key):
@@ -785,6 +797,9 @@ cdef class Set:
 		cdef pair[set[PyObjectSmartPtr].iterator, cbool] result = self.set.insert(PyObjectSmartPtr(<c_value_t>value))
 
 		return result.second
+
+	cpdef SetIterator erase(self, SetIterator pos):
+		return SetIterator.create(self.set.erase(pos.it))
 
 	cpdef void swap(self, Set other):
 		self.set.swap(other.set)
@@ -866,6 +881,9 @@ cdef class MultiSet:
 		cdef multiset[PyObjectSmartPtr].iterator it = self.multiset.insert(PyObjectSmartPtr(<c_value_t>value))
 
 		return MultiSetIterator.create(it)
+
+	cpdef MultiSetIterator erase(self, MultiSetIterator pos):
+		return MultiSetIterator.create(self.multiset.erase(pos.it))
 
 	cpdef void swap(self, MultiSet other):
 		self.multiset.swap(other.multiset)
@@ -983,6 +1001,9 @@ cdef class UnorderedMap:
 		cdef pair[unordered_map[PyObjectSmartPtr, PyObjectSmartPtr].iterator, cbool] result = self.map.insert(item)
 		return result.second
 
+	cpdef UnorderedMapIterator erase(self, UnorderedMapIterator pos):
+		return UnorderedMapIterator.create(self.map.erase(pos.it))
+
 	# Lookup
 
 	cpdef size_t count(self, object key):
@@ -1073,6 +1094,9 @@ cdef class UnorderedMultiMap:
 		cdef unordered_multimap[PyObjectSmartPtr, PyObjectSmartPtr].iterator it = self.multimap.insert(item)
 		return UnorderedMultiMapIterator.create(it)
 
+	cpdef UnorderedMultiMapIterator erase(self, UnorderedMultiMapIterator pos):
+		return UnorderedMultiMapIterator.create(self.multimap.erase(pos.it))
+
 	# Lookup
 
 	cpdef size_t count(self, object key):
@@ -1146,6 +1170,9 @@ cdef class UnorderedSet:
 		cdef pair[unordered_set[PyObjectSmartPtr].iterator, cbool] result = self.set.insert(PyObjectSmartPtr(<c_value_t>value))
 
 		return result.second
+
+	cpdef UnorderedSetIterator erase(self, UnorderedSetIterator pos):
+		return UnorderedSetIterator.create(self.set.erase(pos.it))
 
 	cpdef void swap(self, UnorderedSet other):
 		self.set.swap(other.set)
@@ -1222,6 +1249,9 @@ cdef class UnorderedMultiSet:
 		cdef unordered_multiset[PyObjectSmartPtr].iterator it = self.multiset.insert(PyObjectSmartPtr(<c_value_t>value))
 
 		return UnorderedMultiSetIterator.create(it)
+
+	cpdef UnorderedMultiSetIterator erase(self, UnorderedMultiSetIterator pos):
+		return UnorderedMultiSetIterator.create(self.multiset.erase(pos.it))
 
 	cpdef void swap(self, UnorderedMultiSet other):
 		self.multiset.swap(other.multiset)
@@ -1324,7 +1354,9 @@ cdef class Vector:
 
 	# cpdef insert()
 	# cpdef emplace()
-	# cpdef erase()
+
+	cpdef VectorIterator erase(self, VectorIterator pos):
+		return VectorIterator.create(self.vector.erase(pos.it))
 
 	cpdef void push_back(self, object value):
 		self.vector.push_back(PyObjectSmartPtr(<c_value_t>value))

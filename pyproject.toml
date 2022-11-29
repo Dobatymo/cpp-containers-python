@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools", "wheel", "Cython @ git+https://github.com/Dobatymo/cython.git"]
+requires = ["setuptools", "wheel", "Cython==3.0.0a11"]
 
 [tool.black]
 line-length = 120
 
 [tool.isort]
 profile = "black"
-src_paths = ["."]
+src_paths = ["cppcontainers"]
 line_length = 120

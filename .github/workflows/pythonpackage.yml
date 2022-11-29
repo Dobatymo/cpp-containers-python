@@ -35,7 +35,7 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        python -m pip install -U pip setuptools cython
+        python -m pip install -U pip setuptools Cython==3.0.0a11
     - name: Build dists
       run: |
         python setup.py sdist
