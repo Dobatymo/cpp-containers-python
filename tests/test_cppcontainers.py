@@ -7,11 +7,11 @@ from cppcontainers import (
     ForwardList,
     List,
     Map,
+    MultiMap,
     MultiSet,
     Set,
     UnorderedMap,
     UnorderedMultiMap,
-    MultiMap,
     UnorderedMultiSet,
     UnorderedSet,
     Vector,
@@ -19,6 +19,7 @@ from cppcontainers import (
 
 values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 items = [("a", 1), ("b", 2), ("c", 3), ("d", 4), ("e", 5)]
+
 
 class CppContainersTest(MyTestCase):
 
@@ -28,7 +29,8 @@ class CppContainersTest(MyTestCase):
         obj = Vector()
         obj.update(values)
 
-        assert list(obj) == values, list(obj)
+        assert list(obj) == values
+        assert list(reversed(obj)) == list(reversed(values))
 
         assert obj == obj
         assert obj is not None
