@@ -1,10 +1,54 @@
 [build-system]
-requires = ["setuptools", "wheel", "Cython==3.0.0a11"]
+build-backend = "setuptools.build_meta"
+requires = [
+  "cython==3.0.10",
+  "setuptools",
+]
+
+[project]
+name = "cpp-containers"
+version = "0.1"
+description = "Python wrapper for CPP stdlib containers"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [ { name = "Dobatymo" } ]
+requires-python = ">=3.7"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+optional-dependencies.test = [
+  "genutility[test]",
+]
+
+urls.Home = "https://github.com/Dobatymo/cpp-containers-python"
+
+[tool.setuptools]
+packages = [ "cppcontainers" ]
 
 [tool.black]
 line-length = 120
 
+[tool.ruff]
+line-length = 120
+
 [tool.isort]
 profile = "black"
-src_paths = ["cppcontainers"]
 line_length = 120
+
+[tool.mypy]
+allow_redefinition = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[tool.bandit]
+skips = [ "B101" ]
+
+[tool.cython-lint]
+max-line-length = 120
+ignore = [ "W191" ]

@@ -9,17 +9,17 @@ x86 = ("x86_64", "amd64", "i386", "x86", "i686")
 
 if sys.platform.startswith("linux"):
     if machine in x86:
-        cflags = ["-std=c++14", "-O2", "-mavx2"]
+        cflags = ["-std=c++14", "-O2", "-mavx"]
     else:
         cflags = ["-std=c++14", "-O2"]
 elif sys.platform == "win32":
     if machine in x86:
-        cflags = ["/std:c++14", "/O2", "/arch:AVX2"]
+        cflags = ["/std:c++14", "/O2", "/arch:AVX"]
     else:
         cflags = ["/std:c++14", "/O2"]
 elif sys.platform == "darwin":
     if machine in x86:
-        cflags = ["-std=c++14", "-O2", "-mavx2"]
+        cflags = ["-std=c++14", "-O2", "-mavx"]
     else:
         cflags = ["-std=c++14", "-O2"]
 else:
@@ -35,9 +35,6 @@ cy_extensions = [
     ),
 ]
 
-with open("README.md", "r", encoding="utf-8") as fr:
-    long_description = fr.read()
-
 compiler_directives = {
     "boundscheck": False,
     "wraparound": False,
@@ -50,15 +47,5 @@ compiler_directives = {
 }
 
 setup(
-    author="Dobatymo",
-    name="cpp-containers",
-    version="0.1",
-    url="https://github.com/Dobatymo/cpp-containers-python",
-    description="Python wrapper for CPP stdlib containers",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    packages=["cppcontainers"],
     ext_modules=cythonize(cy_extensions, language_level=3, compiler_directives=compiler_directives),
-    python_requires=">=3.6",
-    zip_safe=False,
 )
