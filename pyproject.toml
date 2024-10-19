@@ -1,7 +1,7 @@
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = [
-  "cython==3.0.10",
+  "cython==3.0.11",
   "setuptools",
 ]
 
@@ -12,15 +12,15 @@ description = "Python wrapper for CPP stdlib containers"
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [ { name = "Dobatymo" } ]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
 ]
 optional-dependencies.test = [
   "genutility[test]",
