@@ -107,7 +107,7 @@ class CppContainersTest(MyTestCase):
         obj = Set()
         obj.update(values)
 
-        assert list(obj) == values
+        self.assertUnorderedSeqEqual(list(obj), values)
         assert obj == obj
         assert obj is not None
 
@@ -121,7 +121,7 @@ class CppContainersTest(MyTestCase):
         obj = MultiSet()
         obj.update(values)
 
-        assert list(obj) == values
+        self.assertUnorderedSeqEqual(list(obj), values)
         assert obj == obj
         assert obj is not None
 

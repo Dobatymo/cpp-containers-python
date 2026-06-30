@@ -2,7 +2,9 @@
 build-backend = "setuptools.build_meta"
 requires = [
   "cython==3.0.12",
-  "setuptools>=61",
+  # PyPy macOS sysconfig lacks LDCXXSHARED: https://github.com/pypa/distutils/issues/283
+  "setuptools>=61,<72.2; platform_python_implementation=='PyPy'",
+  "setuptools>=61; platform_python_implementation!='PyPy'",
 ]
 
 [project]
@@ -35,6 +37,10 @@ dev = [
 packages = [ "cppcontainers" ]
 exclude-package-data.cppcontainers = [ "*.cpp", "*.pxd", "*.pyx" ]
 
+[tool.cibuildwheel]
+test-command = "pytest {project}/tests"
+test-groups = [ "dev" ]
+
 [tool.ruff]
 line-length = 120
 lint.extend-select = [
@@ -55,4 +61,4 @@ warn_unused_configs = true
 
 [tool.cython-lint]
 max-line-length = 120
-ignore = [ "W191" ]
+ignore = [ "E501", "W191" ]

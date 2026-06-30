@@ -50,6 +50,10 @@ repos:
   - id: zizmor
     language_version: python3.13
     args: [--fix=safe, --offline]
+- repo: https://github.com/rhysd/actionlint
+  rev: v1.7.12
+  hooks:
+  - id: actionlint
 - repo: https://github.com/Yelp/detect-secrets
   rev: v1.5.0
   hooks:

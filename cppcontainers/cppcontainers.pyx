@@ -1,9 +1,9 @@
 from typing import Any, Iterable, Tuple
 
 from cpython.ref cimport PyObject
-from cython.operator cimport dereference as deref
-from cython.operator cimport predecrement as dec
-from cython.operator cimport preincrement as inc
+from cython.operator cimport dereference as cy_deref
+from cython.operator cimport predecrement as cy_dec
+from cython.operator cimport preincrement as cy_inc
 from libcpp.deque cimport deque
 from libcpp.forward_list cimport forward_list
 from libcpp.list cimport list
@@ -50,13 +50,13 @@ cdef class DequeIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, DequeIterator other):
 		return self.it == other.it
@@ -76,13 +76,13 @@ cdef class DequeReverseIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, DequeReverseIterator other):
 		return self.it == other.it
@@ -101,10 +101,10 @@ cdef class ForwardListIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, ForwardListIterator other):
 		return self.it == other.it
@@ -121,13 +121,13 @@ cdef class ListIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, ListIterator other):
 		return self.it == other.it
@@ -144,13 +144,13 @@ cdef class ListReverseIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, ListReverseIterator other):
 		return self.it == other.it
@@ -167,13 +167,13 @@ cdef class MapIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = deref(self.it)
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = cy_deref(self.it)
 		return (<p_value_t>result.first.get(), <p_value_t>result.second.get())
 
 	def __eq__(self, MapIterator other):
@@ -191,13 +191,13 @@ cdef class MapReverseIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = deref(self.it)
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = cy_deref(self.it)
 		return (<p_value_t>result.first.get(), <p_value_t>result.second.get())
 
 	def __eq__(self, MapReverseIterator other):
@@ -215,13 +215,13 @@ cdef class MultiMapIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = deref(self.it)
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = cy_deref(self.it)
 		return (<p_value_t>result.first.get(), <p_value_t>result.second.get())
 
 	def __eq__(self, MultiMapIterator other):
@@ -238,13 +238,13 @@ cdef class MultiMapReverseIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = deref(self.it)
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = cy_deref(self.it)
 		return (<p_value_t>result.first.get(), <p_value_t>result.second.get())
 
 	def __eq__(self, MultiMapReverseIterator other):
@@ -262,13 +262,13 @@ cdef class SetIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, SetIterator other):
 		return self.it == other.it
@@ -285,13 +285,13 @@ cdef class SetReverseIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, SetReverseIterator other):
 		return self.it == other.it
@@ -308,13 +308,13 @@ cdef class MultiSetIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, MultiSetIterator other):
 		return self.it == other.it
@@ -331,13 +331,13 @@ cdef class MultiSetReverseIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, MultiSetReverseIterator other):
 		return self.it == other.it
@@ -354,10 +354,10 @@ cdef class UnorderedMapIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef object deref(self):
-		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = deref(self.it)
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = cy_deref(self.it)
 		return (<p_value_t>result.first.get(), <p_value_t>result.second.get())
 
 	def __eq__(self, UnorderedMapIterator other):
@@ -375,10 +375,10 @@ cdef class UnorderedMultiMapIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef object deref(self):
-		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = deref(self.it)
+		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result = cy_deref(self.it)
 		return (<p_value_t>result.first.get(), <p_value_t>result.second.get())
 
 	def __eq__(self, UnorderedMultiMapIterator other):
@@ -396,10 +396,10 @@ cdef class UnorderedSetIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, UnorderedSetIterator other):
 		return self.it == other.it
@@ -416,10 +416,10 @@ cdef class UnorderedMultiSetIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, UnorderedMultiSetIterator other):
 		return self.it == other.it
@@ -436,13 +436,13 @@ cdef class VectorIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, VectorIterator other):
 		return self.it == other.it
@@ -459,13 +459,13 @@ cdef class VectorReverseIterator:
 		return iter
 
 	cpdef void next(self):
-		inc(self.it)
+		cy_inc(self.it)
 
 	cpdef void dec(self):
-		dec(self.it)
+		cy_dec(self.it)
 
 	cpdef object deref(self):
-		return <p_value_t>deref(self.it).get()
+		return <p_value_t>cy_deref(self.it).get()
 
 	def __eq__(self, VectorReverseIterator other):
 		return self.it == other.it
@@ -512,8 +512,8 @@ cdef class Deque:
 	def __iter__(self):
 		cdef deque_it it = self.deque.begin()
 		while it != self.deque.end():
-			yield <p_value_t>deref(it).get()
-			inc(it)
+			yield <p_value_t>cy_deref(it).get()
+			cy_inc(it)
 
 	# Capacity
 
@@ -589,8 +589,8 @@ cdef class ForwardList:
 	def __iter__(self):
 		cdef forward_list_it it = self.list.begin()
 		while it != self.list.end():
-			yield <p_value_t>deref(it).get()
-			inc(it)
+			yield <p_value_t>cy_deref(it).get()
+			cy_inc(it)
 
 	# Capacity
 
@@ -677,8 +677,8 @@ cdef class List:
 	def __iter__(self):
 		cdef list_it it = self.list.begin()
 		while it != self.list.end():
-			yield <p_value_t>deref(it).get()
-			inc(it)
+			yield <p_value_t>cy_deref(it).get()
+			cy_inc(it)
 
 	# Capacity
 
@@ -783,25 +783,25 @@ cdef class Map:
 		cdef map_it it = self.map.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.map.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield <p_value_t>result.first.get()
-			inc(it)
+			cy_inc(it)
 
 	def values(self):
 		cdef map_it it = self.map.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.map.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield <p_value_t>result.second.get()
-			inc(it)
+			cy_inc(it)
 
 	def items(self):
 		cdef map_it it = self.map.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.map.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield (<p_value_t>result.first.get(), <p_value_t>result.second.get())
-			inc(it)
+			cy_inc(it)
 
 	def __iter__(self):
 		return self.keys()
@@ -845,7 +845,7 @@ cdef class Map:
 		cdef map_it it = self.map.find(PyObjectSmartPtr(<c_value_t>key))
 
 		if it != self.map.end():
-			return <p_value_t>deref(it).second.get()
+			return <p_value_t>cy_deref(it).second.get()
 		else:
 			raise KeyError(key)
 
@@ -853,10 +853,9 @@ cdef class Map:
 		cdef pair[map_it, map_it] result = self.map.equal_range(PyObjectSmartPtr(<c_value_t>key))
 		return MapIterator.create(result.first), MapIterator.create(result.second)
 
-	""" C++ 20
-	cpdef bint contains(self, object key):
-		return self.map.contains(PyObjectSmartPtr(<c_value_t>key))
-	"""
+	# C++ 20
+	# cpdef bint contains(self, object key):
+	# 	return self.map.contains(PyObjectSmartPtr(<c_value_t>key))
 
 	# Non-member functions
 
@@ -894,25 +893,25 @@ cdef class MultiMap:
 		cdef multimap_it it = self.multimap.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.multimap.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield <p_value_t>result.first.get()
-			inc(it)
+			cy_inc(it)
 
 	def values(self):
 		cdef multimap_it it = self.multimap.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.multimap.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield <p_value_t>result.second.get()
-			inc(it)
+			cy_inc(it)
 
 	def items(self):
 		cdef multimap_it it = self.multimap.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.multimap.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield (<p_value_t>result.first.get(), <p_value_t>result.second.get())
-			inc(it)
+			cy_inc(it)
 
 	def __iter__(self):
 		return self.keys()
@@ -956,7 +955,7 @@ cdef class MultiMap:
 		cdef multimap_it it = self.multimap.find(PyObjectSmartPtr(<c_value_t>key))
 
 		if it != self.multimap.end():
-			return <p_value_t>deref(it).second.get()
+			return <p_value_t>cy_deref(it).second.get()
 		else:
 			raise KeyError(key)
 
@@ -964,10 +963,9 @@ cdef class MultiMap:
 		cdef pair[multimap_it, multimap_it] result = self.multimap.equal_range(PyObjectSmartPtr(<c_value_t>key))
 		return MultiMapIterator.create(result.first), MultiMapIterator.create(result.second)
 
-	""" C++ 20
-	cpdef bint contains(self, object key):
-		return self.multimap.contains(PyObjectSmartPtr(<c_value_t>key))
-	"""
+	# C++ 20
+	# cpdef bint contains(self, object key):
+	# 	return self.multimap.contains(PyObjectSmartPtr(<c_value_t>key))
 
 	# Non-member functions
 
@@ -1007,8 +1005,8 @@ cdef class Set:
 	def __iter__(self):
 		cdef set_it it = self.set.begin()
 		while it != self.set.end():
-			yield <p_value_t>deref(it).get()
-			inc(it)
+			yield <p_value_t>cy_deref(it).get()
+			cy_inc(it)
 
 	# Capacity
 
@@ -1037,10 +1035,9 @@ cdef class Set:
 	cpdef void swap(self, Set other):
 		self.set.swap(other.set)
 
-	""" C++ 17
-	cpdef void merge(self, Set source):
-		self.set.merge(source.set)
-	"""
+	# C++ 17
+	# cpdef void merge(self, Set source):
+	# 	self.set.merge(source.set)
 
 	# Lookup
 
@@ -1053,7 +1050,7 @@ cdef class Set:
 		cdef set_it it = self.set.find(PyObjectSmartPtr(<c_value_t>value))
 
 		if it != self.set.end():
-			return <p_value_t>deref(it).get()
+			return <p_value_t>cy_deref(it).get()
 		else:
 			raise KeyError(value)
 
@@ -1097,8 +1094,8 @@ cdef class MultiSet:
 	def __iter__(self):
 		cdef multiset_it it = self.multiset.begin()
 		while it != self.multiset.end():
-			yield <p_value_t>deref(it).get()
-			inc(it)
+			yield <p_value_t>cy_deref(it).get()
+			cy_inc(it)
 
 	# Capacity
 
@@ -1127,10 +1124,9 @@ cdef class MultiSet:
 	cpdef void swap(self, MultiSet other):
 		self.multiset.swap(other.multiset)
 
-	""" C++ 17
-	cpdef void merge(self, MultiSet source):
-		self.multiset.merge(source.multiset)
-	"""
+	# C++ 17
+	# cpdef void merge(self, MultiSet source):
+	# 	self.multiset.merge(source.multiset)
 
 	# Lookup
 
@@ -1143,7 +1139,7 @@ cdef class MultiSet:
 		cdef multiset_it it = self.multiset.find(PyObjectSmartPtr(<c_value_t>key))
 
 		if it != self.multiset.end():
-			return <p_value_t>deref(it).get()
+			return <p_value_t>cy_deref(it).get()
 		else:
 			raise KeyError(key)
 
@@ -1195,25 +1191,25 @@ cdef class UnorderedMap:
 		cdef unordered_map_it it = self.map.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.map.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield <p_value_t>result.first.get()
-			inc(it)
+			cy_inc(it)
 
 	def values(self):
 		cdef unordered_map_it it = self.map.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.map.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield <p_value_t>result.second.get()
-			inc(it)
+			cy_inc(it)
 
 	def items(self):
 		cdef unordered_map_it it = self.map.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.map.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield (<p_value_t>result.first.get(), <p_value_t>result.second.get())
-			inc(it)
+			cy_inc(it)
 
 	def __iter__(self):
 		return self.keys()
@@ -1257,7 +1253,7 @@ cdef class UnorderedMap:
 		cdef unordered_map_it it = self.map.find(PyObjectSmartPtr(<c_value_t>key))
 
 		if it != self.map.end():
-			return <p_value_t>deref(it).second.get()
+			return <p_value_t>cy_deref(it).second.get()
 		else:
 			raise KeyError(key)
 
@@ -1265,10 +1261,9 @@ cdef class UnorderedMap:
 		cdef pair[unordered_map_it, unordered_map_it] result = self.map.equal_range(PyObjectSmartPtr(<c_value_t>key))
 		return UnorderedMapIterator.create(result.first), UnorderedMapIterator.create(result.second)
 
-	""" C++ 20
-	cpdef bint contains(self, object key):
-		return self.map.contains(PyObjectSmartPtr(<c_value_t>key))
-	"""
+	# C++ 20
+	# cpdef bint contains(self, object key):
+	# 	return self.map.contains(PyObjectSmartPtr(<c_value_t>key))
 
 	# Hash policy
 
@@ -1303,25 +1298,25 @@ cdef class UnorderedMultiMap:
 		cdef unordered_multimap_it it = self.multimap.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.multimap.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield <p_value_t>result.first.get()
-			inc(it)
+			cy_inc(it)
 
 	def values(self):
 		cdef unordered_multimap_it it = self.multimap.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.multimap.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield <p_value_t>result.second.get()
-			inc(it)
+			cy_inc(it)
 
 	def items(self):
 		cdef unordered_multimap_it it = self.multimap.begin()
 		cdef pair[PyObjectSmartPtr, PyObjectSmartPtr] result
 		while it != self.multimap.end():
-			result = deref(it)
+			result = cy_deref(it)
 			yield (<p_value_t>result.first.get(), <p_value_t>result.second.get())
-			inc(it)
+			cy_inc(it)
 
 	def __iter__(self):
 		return self.keys()
@@ -1354,13 +1349,12 @@ cdef class UnorderedMultiMap:
 	cpdef void swap(self, UnorderedMultiMap other):
 		self.multimap.swap(other.multimap)
 
-	""" C++ 17
-	cpdef void merge_umap(self, UnorderedMap source):
-		self.multimap.merge(source.map)
-
-	cpdef void merge(self, UnorderedMultiMap source):
-		self.multimap.merge(source.multimap)
-	"""
+	# C++ 17
+	# cpdef void merge_umap(self, UnorderedMap source):
+	# 	self.multimap.merge(source.map)
+	#
+	# cpdef void merge(self, UnorderedMultiMap source):
+	# 	self.multimap.merge(source.multimap)
 
 	# Lookup
 
@@ -1373,7 +1367,7 @@ cdef class UnorderedMultiMap:
 		cdef unordered_multimap_it it = self.multimap.find(PyObjectSmartPtr(<c_value_t>key))
 
 		if it != self.multimap.end():
-			return <p_value_t>deref(it).second.get()
+			return <p_value_t>cy_deref(it).second.get()
 		else:
 			raise KeyError(key)
 
@@ -1381,10 +1375,9 @@ cdef class UnorderedMultiMap:
 		cdef pair[unordered_multimap_it, unordered_multimap_it] result = self.multimap.equal_range(PyObjectSmartPtr(<c_value_t>key))
 		return UnorderedMultiMapIterator.create(result.first), UnorderedMultiMapIterator.create(result.second)
 
-	""" C++ 20
-	cpdef bint contains(self, object key):
-		return self.multimap.contains(PyObjectSmartPtr(<c_value_t>key))
-	"""
+	# C++ 20
+	# cpdef bint contains(self, object key):
+	# 	return self.multimap.contains(PyObjectSmartPtr(<c_value_t>key))
 
 	# Hash policy
 
@@ -1425,8 +1418,8 @@ cdef class UnorderedSet:
 	def __iter__(self):
 		cdef unordered_set_it it = self.set.begin()
 		while it != self.set.end():
-			yield <p_value_t>deref(it).get()
-			inc(it)
+			yield <p_value_t>cy_deref(it).get()
+			cy_inc(it)
 
 	# Capacity
 
@@ -1455,10 +1448,9 @@ cdef class UnorderedSet:
 	cpdef void swap(self, UnorderedSet other):
 		self.set.swap(other.set)
 
-	""" C++ 17
-	cpdef void merge(self, UnorderedSet source):
-		self.set.merge(source.set)
-	"""
+	# C++ 17
+	# cpdef void merge(self, UnorderedSet source):
+	# 	self.set.merge(source.set)
 
 	# Lookup
 
@@ -1471,7 +1463,7 @@ cdef class UnorderedSet:
 		cdef unordered_set_it it = self.set.find(PyObjectSmartPtr(<c_value_t>key))
 
 		if it != self.set.end():
-			return <p_value_t>deref(it).get()
+			return <p_value_t>cy_deref(it).get()
 		else:
 			raise KeyError(key)
 
@@ -1517,8 +1509,8 @@ cdef class UnorderedMultiSet:
 	def __iter__(self):
 		cdef unordered_multiset_it it = self.multiset.begin()
 		while it != self.multiset.end():
-			yield <p_value_t>deref(it).get()
-			inc(it)
+			yield <p_value_t>cy_deref(it).get()
+			cy_inc(it)
 
 	# Capacity
 
@@ -1549,10 +1541,9 @@ cdef class UnorderedMultiSet:
 
 	# extract()
 
-	""" C++ 17
-	cpdef void merge(self, UnorderedMultiSet source):
-		self.multiset.merge(source.multiset)
-	"""
+	# C++ 17
+	# cpdef void merge(self, UnorderedMultiSet source):
+	# 	self.multiset.merge(source.multiset)
 
 	# Lookup
 
@@ -1565,7 +1556,7 @@ cdef class UnorderedMultiSet:
 		cdef unordered_multiset_it it = self.multiset.find(PyObjectSmartPtr(<c_value_t>key))
 
 		if it != self.multiset.end():
-			return <p_value_t>deref(it).get()
+			return <p_value_t>cy_deref(it).get()
 		else:
 			raise KeyError(key)
 
@@ -1636,14 +1627,14 @@ cdef class Vector:
 	def __iter__(self):
 		cdef vector_it it = self.vector.begin()
 		while it != self.vector.end():
-			yield <p_value_t>deref(it).get()
-			inc(it)
+			yield <p_value_t>cy_deref(it).get()
+			cy_inc(it)
 
 	def __reversed__(self):
 		cdef vector_rit it = self.vector.rbegin()
 		while it != self.vector.rend():
-			yield <p_value_t>deref(it).get()
-			inc(it)
+			yield <p_value_t>cy_deref(it).get()
+			cy_inc(it)
 
 	# Capacity
 
