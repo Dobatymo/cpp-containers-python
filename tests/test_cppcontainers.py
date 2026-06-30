@@ -258,6 +258,51 @@ class CppContainersTest(MyTestCase):
             assert [k for k, v in result] == [key, key]
             assert {id(v) for k, v in result} == {id(value1), id(value2)}
 
+    def test_equal_range_single_maps(self):
+        for cls in (Map, UnorderedMap):
+            key = object()
+            value = object()
+            obj = cls()
+            obj.insert(object(), object())
+            obj.insert(key, value)
+
+            first, last = obj.equal_range(key)
+            assert type(first).__name__ == f"{cls.__name__}Iterator"
+            assert type(last).__name__ == f"{cls.__name__}Iterator"
+            assert equal_range_items(first, last) == [(key, value)]
+
+    def test_reverse_iterators(self):
+        for cls in (Deque, List, Map, MultiMap, Set, MultiSet):
+            obj = cls()
+            if cls in (Map, MultiMap):
+                obj.insert("a", 1)
+                expected = ("a", 1)
+            else:
+                obj.insert("a") if cls in (Set, MultiSet) else obj.push_back("a")
+                expected = "a"
+
+            first = obj.rbegin()
+            assert type(first).__name__ == f"{cls.__name__}ReverseIterator"
+            assert type(obj.rend()).__name__ == f"{cls.__name__}ReverseIterator"
+            assert first.deref() == expected
+
+    def test_map_swaps(self):
+        for cls in (Map, MultiMap, UnorderedMap):
+            left = cls()
+            right = cls()
+            left.insert("left", 1)
+            right.insert("right", 2)
+
+            left.swap(right)
+            assert list(left.items()) == [("right", 2)]
+            assert list(right.items()) == [("left", 1)]
+
+    def test_unordered_map_hash_policy(self):
+        for cls in (UnorderedMap, UnorderedMultiMap):
+            obj = cls()
+            assert obj.load_factor() >= 0
+            assert obj.max_load_factor() > 0
+
 
 if __name__ == "__main__":
     unittest.main()
