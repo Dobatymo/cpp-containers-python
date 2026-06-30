@@ -1,8 +1,8 @@
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = [
-  "cython==3.0.11",
-  "setuptools",
+  "cython==3.0.12",
+  "setuptools>=61",
 ]
 
 [project]
@@ -21,33 +21,36 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
-optional-dependencies.test = [
-  "genutility[test]",
-]
-
 urls.Home = "https://github.com/Dobatymo/cpp-containers-python"
+
+[dependency-groups]
+dev = [
+  "genutility>=0.0.120",
+  "pytest>=8.3.5",
+]
 
 [tool.setuptools]
 packages = [ "cppcontainers" ]
 
-[tool.black]
-line-length = 120
-
 [tool.ruff]
 line-length = 120
-
-[tool.isort]
-profile = "black"
-line_length = 120
+lint.extend-select = [
+  "B",
+  "C4",
+  "DTZ",
+  "I",
+  "PIE",
+  "S",
+  "UP",
+]
+lint.ignore = [ "S101" ]
 
 [tool.mypy]
+warn_unused_ignores = true
 allow_redefinition = true
 warn_unused_configs = true
-warn_unused_ignores = true
-
-[tool.bandit]
-skips = [ "B101" ]
 
 [tool.cython-lint]
 max-line-length = 120

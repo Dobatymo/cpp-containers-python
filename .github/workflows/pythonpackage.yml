@@ -13,23 +13,27 @@ on:
     types:
     - published
 
+permissions:
+  contents: read
+
 jobs:
   test:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-20.04, macos-13]
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        os: [windows-latest, ubuntu-22.04, macos-14]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
+    - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
       with:
         python-version: ${{ matrix.python-version }}
+    - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
     - name: Run tests
-      run: |
-        python -m pip install .[test]
-        cd tests && python -m unittest
+      run: uv run pytest
 
   build-wheels:
     if: github.event_name == 'release' && github.event.action == 'published'
@@ -37,30 +41,34 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-20.04, macos-13, windows-latest]
+        os: [ubuntu-22.04, macos-14, windows-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
+    - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
       with:
         python-version: 3.8
     - name: Build
       run: |
         python -m pip install cibuildwheel==2.21.3
         python -m cibuildwheel
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
         path: wheelhouse/*.whl
 
   build-sdist:
     if: github.event_name == 'release' && github.event.action == 'published'
     needs: test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
+    - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
       with:
         python-version: 3.8
     - name: Install dependencies
@@ -69,7 +77,7 @@ jobs:
     - name: Build dists
       run: |
         python -m build --sdist
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
         path: dist/*.tar.gz
 
@@ -77,15 +85,15 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'published'
     needs: [build-wheels, build-sdist]
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
       with:
         name: artifact
         path: dist
 
-    - uses: pypa/gh-action-pypi-publish@release/v1
+    - uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
       with:
         user: __token__
         password: ${{ secrets.pypi_password }}

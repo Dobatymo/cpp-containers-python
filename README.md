@@ -8,6 +8,7 @@ For more documentation about the C++ containers see <https://en.cppreference.com
 
 ## Requirements
 Python 3.7+.
+Source builds currently target C++14.
 
 ## Install
 `pip install cpp-containers`

@@ -1513,7 +1513,7 @@ cdef class UnorderedMultiSet:
 	cpdef equal_range(self, object key):
 		cdef pair[unordered_multiset_it, unordered_multiset_it] result = self.multiset.equal_range(PyObjectSmartPtr(<c_value_t>key))
 
-		return (UnorderedSetIterator.create(result.first), UnorderedSetIterator.create(result.second))
+		return (UnorderedMultiSetIterator.create(result.first), UnorderedMultiSetIterator.create(result.second))
 
 	# Hash policy
 
