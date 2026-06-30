@@ -19,9 +19,11 @@ public:
 
   PyObjectSmartPtr &operator=(const PyObjectSmartPtr &other) noexcept {
     if (this != &other) {
-      Py_XDECREF(ptr);
-      ptr = other.ptr;
-      Py_XINCREF(ptr);
+      PyObject *new_ptr = other.ptr;
+      Py_XINCREF(new_ptr);
+      PyObject *old_ptr = ptr;
+      ptr = new_ptr;
+      Py_XDECREF(old_ptr);
     }
 
     return *this;
@@ -48,7 +50,7 @@ public:
   PyObject *get() const noexcept { return ptr; }
 
   bool operator<(const PyObjectSmartPtr &other) const noexcept {
-    return get() < other.get();
+    return std::less<PyObject *>{}(get(), other.get());
   }
 
   bool operator==(const PyObjectSmartPtr &other) const noexcept {
