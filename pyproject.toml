@@ -33,6 +33,7 @@ dev = [
 
 [tool.setuptools]
 packages = [ "cppcontainers" ]
+exclude-package-data.cppcontainers = [ "*.cpp", "*.pxd", "*.pyx" ]
 
 [tool.ruff]
 line-length = 120

@@ -28,14 +28,16 @@ repos:
   - id: pyproject-fmt
     language_version: python3.13
 - repo: https://github.com/pre-commit/mirrors-clang-format
-  rev: v19.1.2
+  rev: v22.1.5
   hooks:
   - id: clang-format
 - repo: https://github.com/MarcoGorelli/cython-lint
-  rev: v0.16.2
+  rev: v0.21.0
   hooks:
   - id: cython-lint
+    language_version: python3.13
   - id: double-quote-cython-strings
+    language_version: python3.13
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: v0.15.20
   hooks:

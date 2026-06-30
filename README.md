@@ -7,7 +7,7 @@ This design decision was made for performance reasons and to keep the code as si
 For more documentation about the C++ containers see <https://en.cppreference.com/w/cpp/container>.
 
 ## Requirements
-Python 3.7+.
+Python 3.8+.
 Source builds currently target C++14.
 
 ## Install
@@ -20,10 +20,9 @@ s = MultiSet()
 s.insert(1)
 s.insert(2)
 s.insert(2)
-assert list(s) == [1, 2, 2]
+assert sorted(s) == [1, 2, 2]
 assert s.size() == 3
 assert s.count(2) == 2
-assert s.begin().deref() == 1
 ```
 
 The containers store references to Python objects, not copies.
@@ -32,17 +31,18 @@ The containers store references to Python objects, not copies.
 from cppcontainers import Vector
 from sys import getrefcount
 v = Vector()
-a = "asd"
+a = object()
 b = [1, 2, 3]
+refcount = getrefcount(a)
 v.push_back(a)
 v.push_back(b)
 assert id(a) == id(v[0])
 assert list(v) == [a, b]
 b.append(4)
 assert b[-1] == v[1][-1]
-assert getrefcount(a) == 3
+assert getrefcount(a) == refcount + 1
 del v
-assert getrefcount(a) == 2
+assert getrefcount(a) == refcount
 ```
 
 The following crashes, just like in C++.
